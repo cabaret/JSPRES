@@ -291,44 +291,37 @@
 
 				<section>
 					<section>
+											<h2>The Module Pattern</h2>
 						<pre><code contenteditable style="max-height: 700px">	
 	var myApp = (function ($) {
-		var init, initSlider, initModal, search;
+		var init, initSlider, initModal;
 
 		init = function () {
 			initSlider();
 			initModal();
-			initSearch();
 		};
 		initSlider = function() { /* ... */ };
 		initModal  = function() { /* ... */ };
 
-		search = function () { /* ... */ };
-
 		return {
-			init: init,
-			search: search
+			init: init
 		};
 	}(jQuery));
 
 	$(document).ready(function () {
 		myApp.init();
 	});
-
-	$('#search-form').submit(function () {
-		myApp.search();
-	});
 						</code></pre>
 						<aside class="notes" data-markdown>
 							<script type="text/template">
-									public api (init, search)
+									
 
 							</script>
 						</aside>
 
 					</section>
 					<section>
-						<h2>The module pattern</h2>
+											<h2>The Module Pattern</h2>
 						<ul>
 							<li>provides structure</li>
 							<li>helps organize your code as it grows</li>
@@ -342,62 +335,35 @@
 						</ul>
 					</section>
 					<section>
-						<p>Let's have create our namespace or use it if it exists already</p>
-						<p>We will attach our modules to this global object</p>
-						<pre><code contenteditable>
-	var Kunstmaan = window.Kunstmaan || {};
+						<h2>Revealing Module Pattern</h2>
+						<pre><code contenteditable style="max-height: 700px;">
+	var myApp = (function ($) {
+		var init, initSlider, initSearch, search;
+
+		init = function () {
+			initSlider();
+			initSearch();
+		};
+		initSlider = function() { /* ... */ };
+		initSearch = function() { /* ... */ };
+		search     = function() { /* ... */ };
+
+		return {
+			init: init,
+			search: search
+		};
+	}(jQuery));
+
+	$(document).ready(function () {
+		myApp.init();
+	});
+
+	$('#btn').click(function () {
+		myApp.search($('#someInput').val());
+	});
 						</code></pre>
-					</section>
-
-					<section>
-						<p>We start off with a self-invoking function</p>
-						<p>To which we add a constructor</p>
-
-						<pre><code contenteditable>
-	;(function ($, window, undefined)) {
-		Kunstmaan.Modal = function (el) {
-			// set some defaults
-			this.el = el;
-			this.$el = $(el);
-		}
-	})(jQuery, window);
-						</code></pre>
-
-						<p>We can now create a new instance of Kunstmaan.Modal by calling:</p>
-						<pre><code contenteditable>
-	var myModal = new Kunstmaan.Modal('someDiv');
-						</code></pre>
-
-					</section>
-
-					<section>
-						<p>JavaScript is a prototypal programming language.</p>
-						<p>We add the functions to the prototype so they are</p>
-						<p>available to all instances of Kunstmaan.Modal</p>
-
-						<pre><code contenteditable>
-	Kunstmaan.Modal.prototype.init: function () {
-		this.bindEvents();
-	},
-
-	Kunstmaan.Modal.prototype.bindEvents: function () {
-		this.$el.on('click', function () {
-			this.activate();
-		});
-	}
-						</code></pre>
-					</section>
-					<section>
-						<p>We then attach the Kunstmaan object with our </p>
-						<p>Modal module back to the window object</p>
-						<pre><code contenteditable>
-	window.Kunstmaan = Kunstmaan
-						</code></pre>
-
-						<p>This way, we can add multiple modules to our Kunstmaan namespace</p>
 					</section>
 				</section>
-
 				<section>
 					<section>
 						<h2>Ideas</h2>
